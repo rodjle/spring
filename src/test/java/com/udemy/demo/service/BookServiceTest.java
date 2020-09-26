@@ -1,22 +1,21 @@
 package com.udemy.demo.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.udemy.demo.api.dto.BookDTO;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.udemy.demo.api.model.entity.Books;
 import com.udemy.demo.exception.BusinessException;
 import com.udemy.demo.model.repository.BooksRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import javax.swing.text.html.Option;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Example;
@@ -75,7 +74,7 @@ public class BookServiceTest {
         .hasMessage("Isbn Já Cadastrado");
 
     //verifica se nao está chamado método salvar
-    Mockito.verify(repository,Mockito.never()).save(book);
+    verify(repository,Mockito.never()).save(book);
 
   }
 
@@ -134,7 +133,7 @@ public class BookServiceTest {
     org.junit.jupiter.api.Assertions.assertDoesNotThrow(() ->service.delete(book));
 
     //verificações - Verifica se no repository foi chamado 1vz o metodo delete
-    Mockito.verify(repository,Mockito.times(1)).delete(book);
+    verify(repository, times(1)).delete(book);
 
   }
 
@@ -148,7 +147,7 @@ public class BookServiceTest {
     org.junit.jupiter.api.Assertions.assertThrows (IllegalArgumentException.class,() ->service.delete(book));
 
     //verificações - Verifica se no repository foi chamado 0vz o metodo delete
-    Mockito.verify(repository,Mockito.times(0)).delete(book);
+    verify(repository, times(0)).delete(book);
 
   }
 
@@ -163,7 +162,7 @@ public class BookServiceTest {
     org.junit.jupiter.api.Assertions.assertThrows (IllegalArgumentException.class,() ->service.update(book));
 
     //verificações - Verifica se no repository foi chamado 0vz o metodo delete
-    Mockito.verify(repository,Mockito.times(0)).save(book);
+    verify(repository, times(0)).save(book);
 
   }
 
@@ -217,4 +216,22 @@ public class BookServiceTest {
     assertThat(result.getPageable().getPageNumber()).isEqualTo(0); //lá no cenário eu passei 0
     assertThat(result.getPageable().getPageSize()).isEqualTo(10); //la no cenário eu passei 10
   }
+
+  @Test
+  @DisplayName("Deve obter um livro pelo ISBN")
+  public void getBookByIsbnTest(){
+    String isbn="1230";
+
+    //aqui faz o mock colocando no contexto o thenReturn
+    Mockito.when( repository.findByisbn(isbn)).thenReturn(Optional.of(Books.builder().id(1l).isbn(isbn).build()));
+
+    Optional<Books> book=service.getByIsbn(isbn);
+
+    assertThat(book.isPresent()).isTrue();
+    assertThat(book.get().getId()).isEqualTo(1l);
+    assertThat(book.get().getIsbn()).isEqualTo(isbn);
+
+    verify(repository,times(1)).findByisbn(isbn);
+  }
+
 }
