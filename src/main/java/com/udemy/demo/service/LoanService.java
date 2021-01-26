@@ -1,7 +1,9 @@
 package com.udemy.demo.service;
 
 import com.udemy.demo.api.dto.LoanFilterDTO;
+import com.udemy.demo.api.model.entity.Books;
 import com.udemy.demo.api.model.entity.Loan;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -17,4 +19,8 @@ public interface LoanService {
   Loan update(Loan loan);
 
   Page<Loan> find(LoanFilterDTO filterDTO, Pageable pageable);
+
+  Page<Loan> getLoansByBook(Books book, Pageable pageable);
+
+  List<Loan> getAllLateLoans();
 }
