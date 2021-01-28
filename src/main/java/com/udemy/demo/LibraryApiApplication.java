@@ -22,8 +22,7 @@ public class LibraryApiApplication {
     return new ModelMapper();
   }
 
-  @Autowired
-  private EmailService emailService;
+
 
   @Scheduled(cron="0 0/1 * 1/1 * ?")
   public void testeCron(){

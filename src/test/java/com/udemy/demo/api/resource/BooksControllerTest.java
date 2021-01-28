@@ -10,6 +10,7 @@ import com.udemy.demo.api.model.entity.Books;
 import com.udemy.demo.exception.BusinessException;
 import com.udemy.demo.service.BookService;
 
+import com.udemy.demo.service.LoanService;
 import java.util.Arrays;
 import java.util.Optional;
 import org.hamcrest.Matchers;
@@ -45,6 +46,9 @@ public class BooksControllerTest {
 
   @MockBean
   BookService service;
+
+  @MockBean //indica que vai injetar um mock lá no bookcontroller, pois depende disso la
+  LoanService loanService;
 
   @Test
   @DisplayName("Criar um livro com sucesso")
