@@ -6,10 +6,15 @@ import com.udemy.demo.api.model.entity.Books;
 import com.udemy.demo.api.model.entity.Loan;
 import com.udemy.demo.service.BookService;
 import com.udemy.demo.service.LoanService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,6 +34,8 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
+@Api("Book Api")
+@Slf4j
 public class BookController {
 
   private final BookService service;
@@ -43,6 +50,7 @@ public class BookController {
   @ResponseStatus(HttpStatus.CREATED)
   public BookDTO create(@RequestBody @Valid BookDTO dto) {
     //Book book=Book.bui
+    log.info("Create a book for isbn: {}",dto.getIsbn());
     Books entity = modelMapper.map(dto, Books.class);
     entity = service.save(entity);
 
@@ -83,6 +91,10 @@ public class BookController {
 
   //observa que tem 2 get - Spring encaixa os parametros com o metodo correspondente
   @GetMapping
+  @ApiOperation("Procura um livro")
+  @ApiResponses({
+       @ApiResponse(code=204,message="Livro não localizado")
+  })
   public Page<BookDTO> find(BookDTO dto, Pageable pageRequest) {
     System.out.println(dto.getAuthor() + "" + dto.getIsbn());
     Books filter = modelMapper.map(dto, Books.class);
