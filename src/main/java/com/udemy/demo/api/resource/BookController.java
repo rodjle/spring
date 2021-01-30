@@ -34,7 +34,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
-@Api("Book Api")
+@Api("Book Api - Testando")
 @Slf4j
 public class BookController {
 
@@ -50,7 +50,7 @@ public class BookController {
   @ResponseStatus(HttpStatus.CREATED)
   public BookDTO create(@RequestBody @Valid BookDTO dto) {
     //Book book=Book.bui
-    log.info("Create a book for isbn: {}",dto.getIsbn());
+    log.info("Create a book for isbn agora automatizado com heroku: {}",dto.getIsbn());
     Books entity = modelMapper.map(dto, Books.class);
     entity = service.save(entity);
 
